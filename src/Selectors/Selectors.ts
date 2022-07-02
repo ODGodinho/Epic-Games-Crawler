@@ -1,11 +1,7 @@
-import GoogleSearchSelector from "./Search/GoogleSearchSelector";
-import GoogleSelectionEmptySelector from "./Selection/GoogleSelectionEmptySelector";
-import GoogleSelectionSelector from "./Selection/GoogleSelectionSelector";
+import EpicGamesHomeSelector from "./Home/EpicGamesHomeSelector";
 
 const Selectors = {
-    GoogleSelectionEmptySelector,
-    GoogleSelectionSelector,
-    GoogleSearchSelector,
+    EpicGamesHomeSelector,
 };
 
 export default Selectors;
