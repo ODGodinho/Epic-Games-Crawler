@@ -7,18 +7,18 @@ import {
     BrowserContextOptionsContract,
 } from "./Context";
 import { PageContract } from "./Page";
-/* §BrowserLaunchOptionImport§ */
+import { LaunchOptions as BrowserLaunchOptions, Browser, BrowserType } from "playwright";
 
 export type BrowserLaunchOptionsContract = {
     args?: string[];
-} /* & */ /* §BrowserLaunchOptionName§ */;
+} & BrowserLaunchOptions;
 
 type BrowserTypeContractGeneric = {
     launchPersistentContext?(userDataDir: string, options?: {} | any): any;
 };
 
 export type BrowserTypeContract<PageType extends PageContract> =
-  /* §BrowserType§ */ /* & */ BrowserTypeContractEssentials<PageType> &
+  BrowserType & BrowserTypeContractEssentials<PageType> &
   BrowserTypeContractGeneric;
 
 export type BrowserContract<PageType extends PageContract> = {
@@ -28,4 +28,4 @@ export type BrowserContract<PageType extends PageContract> = {
         options?: BrowserContextOptionsContract
     ): Promise<BrowserContextContract<PageType>>;
     createIncognitoBrowserContext?(): Promise<BrowserContextContract<PageType>>;
-} /* & */ /* §Browser§ */ & BrowserContractEssentials<PageType>;
+} & Browser & BrowserContractEssentials<PageType>;
