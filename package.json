@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@odg/essentials-crawler-node": "^0.1.0",
+    "axios": "^0.27.2",
     "colors": "^1.4.0",
     "dotenv": "^12.0.4",
     "playwright": "^1.23.1",

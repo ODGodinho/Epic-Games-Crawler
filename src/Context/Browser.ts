@@ -1,6 +1,7 @@
 import { BrowserLaunchOptionsContract } from "@odg/essentials-crawler-node";
 import BrowserEssentials from "@odg/essentials-crawler-node/Context/Browser";
 import ContextEssentials from "@odg/essentials-crawler-node/Context/Context";
+import { appendFile, existsSync } from "fs";
 import { BrowserContract, BrowserTypeContract } from "../@types/Browser";
 import { BrowserContextContract } from "../@types/Context";
 
@@ -23,23 +24,60 @@ class Browser<
 
     protected browserOptions(): BrowserLaunchOptionsContract {
         return {
-            headless: false,
+            headless: Boolean(Number(process.env.USE_HEADLESS) || false),
+            executablePath: process.env.BROWSER_PATH || undefined,
             args: [
                 "--wm-window-animations-disabled",
                 "--no-sandbox",
                 "--disable-setuid-sandbox",
                 "--disable-infobars",
                 "--disable-blink-features=AutomationControlled",
+                "--disable-dev-shm-usage",
+                "--disable-accelerated-2d-canvas",
+                "--no-first-run",
+                "--no-zygote",
+                "--disable-web-security",
+                "--disable-features=IsolateOrigins,site-per-process",
+                "--allow-running-insecure-content",
+                "--mute-audio",
+                "--no-xshm",
+                "--window-size=1920,1080",
+                "--no-default-browser-check",
+                "--disable-gpu",
+                "--enable-webgl",
+                "--ignore-certificate-errors",
+                "--lang=en-US,en;q=0.9",
+                "--password-store=basic",
+                "--disable-gpu-sandbox",
+                "--disable-software-rasterizer",
+                "--disable-background-timer-throttling",
+                "--disable-backgrounding-occluded-windows",
+                "--disable-renderer-backgrounding",
+                "--disable-breakpad",
+                "--disable-canvas-aa",
+                "--disable-2d-canvas-clip-aa",
+                "--disable-gl-drawing-for-tests",
+                "--enable-low-end-device-mode",
             ],
         };
     }
 
+    public async createCurrentState(): Promise<void> {
+        if (!existsSync("./current-state.json")) {
+            appendFile("./current-state.json", "[]", (exception) => {
+                if (exception) console.error("Error create state File", exception);
+            });
+        }
+    }
+
     public async initBrowser(): Promise<void> {
+        await this.createCurrentState();
+
         if (process.env.PERSISTENT_BROWSER && this.browserType.launchPersistentContext) {
             this.browser = null;
             this.persistentContext = await this.browserType.launchPersistentContext(
                 process.env.PERSISTENT_BROWSER,
-                {},
+                this.browserOptions(),
             );
 
             return;
